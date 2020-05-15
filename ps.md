@@ -75,36 +75,83 @@ for tc in range(int(input())):
 https://www.algospot.com/judge/problem/read/WILDCARD
 
 ```c++
-#include<cstdio>
-#include<cstring> 	//memset
-using namespace std;
-bool match(const string& w, const string& s){
-	int pos = 0;
-	while(pos < s.size() && pos < w.size() && (w[pos]=='?' || w[pos]==s[pos])) ++pos;
-	if(pos == w.size()) return pos == s.size();
-	if(w[pos] == '*')
-		for(int skip=0; pos+skip <= s.size(); ++skip)
-			if(match(w.substr(pos+1), s.substr(pos+skip)))
-				return true;
-	return false;
-}
+#include<iostream>
+#include<cstring>
+#include<vector>
+#include<algorithm>
 
-int chche[101][101];
+using namespace std;
+int mem[101][101];
 string W, S;
-bool matchMemoized(int w, int s){
-	int& ret = cache[w][s];
-	if(ret!=-1) return ret;
-	while(s < S.size() && w < W.size() && (W[w] =='?' || w[W] == S[s])){
-		++w;
-		++s;
+bool match(int w, int s){
+	int& ret = mem[w][s];
+	if(ret != -1) return ret;
+	while(w < W.size() && s < S.size() && (W[w]=='?' || W[w]==S[s])){
+		return ret = match(w+1, s+1);
 	}
 	if(w == W.size()) return ret = (s == S.size());
 	if(W[w] == '*')
-		for(int skip=0; skip+s <= S.size(); ++skip)
-			if(matchMemoized(w+1, s+skip))
-				return ret = 1;
-	return ret = 0;
+		return ret = (match(w+1, s) || (s<S.size() && match(w, s+1)));
+	return ret=0;
 }
+int main(){
+	int tc;
+	cin >> tc;
+	while(tc--){
+		cin >> W;
+		int n;
+		cin >> n;
+		vector<string> res;
+		while(n--){
+			memset(mem, -1, sizeof(mem));
+			cin >> S;
+			if(match(0, 0)) res.push_back(S);
+		}
+		sort(res.begin(), res.end());
+		for(auto x: res) cout << x << endl;
+	}
+	return 0;
+}
+```
+
+#### 삼각형 최대 경로 p228
+
+https://www.algospot.com/judge/problem/read/TRIANGLEPATH
+
+```c++
+#include<cstdio>
+#include<algorithm>
+#include<cstring>
+using namespace std;
+int n;
+int a[101][101], mem[101][101];
+int solve(int x, int y){
+	if(x == n-1) return a[x][y];
+	int& ret = mem[x][y];
+	if(ret != -1) return ret;
+	return ret = max(solve(x+1, y), solve(x+1, y+1))+a[x][y];
+}
+int main(){
+	int tc;
+	scanf("%d", &tc);
+	while(tc--){
+		scanf("%d", &n);
+		for(int i=0; i<n; i++)
+			for(int j=0; j<=i; j++)
+				scanf("%d", &a[i][j]);
+		memset(mem, -1, sizeof(mem));
+		printf("%d\n", solve(0, 0));
+	}
+	return 0;
+}
+
+```
+
+#### LIS p230
+
+https://www.algospot.com/judge/problem/read/LIS
+
+```
 
 ```
 
