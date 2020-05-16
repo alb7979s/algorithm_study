@@ -8,6 +8,12 @@
 
 ---
 
+1. 완탐 설계
+2. 전체 답의 점수 반환이 아닌, 앞으로 남은 선택들에 해당하는 점수 반환토록 부분문제 정의
+3. 선택 꼭 필요한것만 남기기
+4. 입력 배열, 문자열이면 적절하게 변환하기
+5. 메모이제이션
+
 ##### 외발뛰기 215p 
 
 https://www.algospot.com/judge/problem/read/JUMPGAME
@@ -114,7 +120,7 @@ int main(){
 }
 ```
 
-#### 삼각형 최대 경로 p228
+#### 삼각형 최대 경로 228p
 
 https://www.algospot.com/judge/problem/read/TRIANGLEPATH
 
@@ -147,11 +153,80 @@ int main(){
 
 ```
 
-#### LIS p230
+#### LIS 230p
 
 https://www.algospot.com/judge/problem/read/LIS
 
+```c++
+#include<cstring>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+const int SIZE = 501;
+int n, S[SIZE], cache[SIZE+1];
+int lis3(int start){
+	int& ret = cache[start+1];
+	if(ret != -1) return ret;
+	ret = 1;
+	for(int next = start+1; next<n; ++next)
+		if(start == -1 || S[start] < S[next])
+			ret = max(ret, lis3(next)+1);
+	return ret;
+}
+int main(){
+	int tc;
+	scanf("%d", &tc);
+	while(tc--){
+		scanf("%d", &n);
+		memset(cache, -1, sizeof(cache));
+		for(int i=0; i<n; i++)
+			scanf("%d", &S[i]);
+		printf("%d\n", lis3(-1)-1);
+	}
+	return 0;
+}
 ```
 
+#### 합친 LIS 236p
+
+https://www.algospot.com/judge/problem/read/JLIS
+
+```c++
+#include<cstdio>
+#include<cstring>
+#include<algorithm>
+#include<limits> //numeric_limits
+using namespace std;
+typedef long long ll;
+const long long INF = numeric_limits<ll>:: max();
+const int SIZE = 101;
+int n, m, A[SIZE], B[SIZE], cache[SIZE+1][SIZE+1];
+int jlis(int indexA, int indexB){
+	int& ret = cache[indexA+1][indexB+1];
+	if(ret != -1) return ret;
+	ret = 2;	//-INF인 A[-1] B[-1] 항상 존재
+	ll a = (indexA == -1 ? -INF : A[indexA]);
+	ll b = (indexB == -1 ? -INF : B[indexB]);
+	ll maxElement = max(a, b);
+	for(int nextA = indexA + 1; nextA < n; ++nextA)
+		if(maxElement < A[nextA])
+			ret = max(ret, jlis(nextA, indexB)+1);
+	for(int nextB = indexB + 1; nextB < m; ++nextB)
+		if(maxElement < B[nextB])
+			ret = max(ret, jlis(indexA, nextB)+1);
+	return ret;
+}
+int main(){
+	int tc;
+	scanf("%d", &tc);
+	while(tc--){
+		scanf("%d %d", &n, &m);
+		for(int i=0; i<n; i++) scanf("%d", &A[i]);
+		for(int i=0; i<m; i++) scanf("%d", &B[i]);
+		memset(cache, -1, sizeof(cache));
+		printf("%d\n", jlis(-1, -1)-2);
+	}
+	return 0;
+}
 ```
 
