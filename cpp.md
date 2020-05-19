@@ -114,3 +114,21 @@ cin.tie(NULL);
 
 #### - double형 memset 주의 그냥 double형이면 for문으로 초기화 해주기
 
+#### - iterator (begin(), end(), insert(), erase())
+
+```c++
+//iterator:: 일종의 포인터, STL안의 데이터를 가리킴
+begin(); end(); //각각 시작주소, 끝 주소(마지막 값보다 한칸 뒤) 리턴
+//사용 예제
+vector<int> v;
+v.push_back(4);
+v.push_back(9);
+v.push_back(17);
+v.insert(v.begin()+1, 12);
+v.insert(v.edn(), 8);
+vector<int>::iterator p;
+for(p=v.begin(); p!=v.end(); p++)
+cout << *p << endl;
+//4 12 9 17 8 출력 됨
+```
+

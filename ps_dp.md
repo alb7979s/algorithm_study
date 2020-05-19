@@ -461,7 +461,7 @@ https://www.algospot.com/judge/problem/read/ASYMTILING
 #include<cstring>
 using namespace std;
 const int MOD = (int)1e9 + 7;
-int n, mem[101];
+int n, mem[101], mem2[101];
 int tiling(int x){
 	if(x <= 1) return 1;
 	int& ret = mem[x];
@@ -477,13 +477,111 @@ int asymmetric(int x){
 	return ret;
 }
 
+int asymmetric2(int x){	//직접 세기(양쪽 끝에서 동시에 진행) 
+	if(x <= 2) return 0; 
+	int& ret = mem2[x];
+	if(ret != -1) return ret;
+	ret = asymmetric2(x-2) % MOD;			//a
+	ret = (ret + asymmetric2(x-4)) % MOD;	//b
+	ret = (ret + tiling(x-3)) % MOD;		//c		요기 MOD연산 때문에 ret+= 했다 틀림
+	ret = (ret + tiling(x-3)) % MOD;		//d		또, (ret+tiling(x-3))*2 % MOD틀림
+	return ret;
+}
 int main(){
 	int tc;
 	scanf("%d", &tc);
 	while(tc--){
 		scanf("%d", &n);
 		memset(mem, -1, sizeof(mem));
-		printf("%d\n", asymmetric(n));
+		memset(mem2, -1, sizeof(mem2));
+		printf("%d\n", asymmetric2(n));
+	}
+	return 0;
+}
+```
+
+#### 폴리오미노 264p
+
+https://www.algospot.com/judge/problem/read/POLY
+
+```c++
+#include<cstdio>
+#include<cstring>
+using namespace std;
+const int SIZE = 101, MOD = (int)1e7;
+int mem[SIZE][SIZE];
+int solve(int n, int first){
+	if(n==first) return 1;
+	int& ret = mem[n][first];
+	if(ret!=-1)return ret;
+	ret=0;
+	for(int i=1; i+first<=n; i++){
+		int add= (first+i-1);
+		add *= solve(n-first, i);
+		add %= MOD;
+		ret += add;
+		ret %= MOD;
+	}
+	return ret;
+}
+int main(){
+	int tc;
+	scanf("%d", &tc);
+	while(tc--){
+		int n, ans=0;
+		scanf("%d", &n);
+		memset(mem, -1, sizeof(mem));
+		for(int i=1; i<=n; i++)
+			ans+=solve(n, i);
+			ans %= MOD;
+		printf("%d\n", ans);
+	}
+	return 0;
+}
+```
+
+#### 두니발 박사의 탈옥 275p
+
+https://www.algospot.com/judge/problem/read/NUMB3RS
+
+```c++
+#include<cstdio>
+#include<cstring>
+using namespace std;
+int n, d, p, q;
+int deg[51], a[51][51];
+double mem[51][101];
+double solve(int here, int days){
+	if(days==0) return (here==p ? 1.0 : 0.0);
+	double& ret = mem[here][days];
+	if(ret > -0.5) return ret;
+	ret = 0.0;
+	for(int there=0; there<n; there++)
+		if(a[here][there])
+			ret += solve(there, days-1)/deg[there];
+	return ret;
+}
+int main(){
+	int tc;
+	scanf("%d", &tc);
+	while(tc--){
+		scanf("%d %d %d", &n, &d, &p);
+		memset(deg, 0, sizeof(deg));
+		for(int i=0; i<n; i++)
+			for(int j=0; j<n; j++){
+				scanf("%d", &a[i][j]);
+				if(a[i][j]) deg[i]++;
+			}
+		for(int i=0; i<51; i++)
+			for(int j=0; j<101; j++)
+				mem[i][j]=-1.0;
+		int t;
+		scanf("%d", &t);
+		while(t--){
+			scanf("%d", &q);
+			printf("%.8f ", solve(q, d));
+		}
+		printf("\n");
 	}
 	return 0;
 }
