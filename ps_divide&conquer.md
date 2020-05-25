@@ -28,7 +28,7 @@ void normalize(vector<int>& num){
 			num[i+1] += num[i]/10;
 			num[i] = num[i]%10;
 		}
-	while(num.size() > 1 && num.end()==0) num.pop_back();
+	while(num.size() > 1 && num.back()==0) num.pop_back();
 }
 vector<int> multiply(vector<int>& a, vector<int>& b){
 	vector<int>c(a.size()+b.size()-1, 0);
@@ -46,17 +46,30 @@ vector<int> multiply(vector<int>& a, vector<int>& b){
 #include<iostream>
 #include<vector>
 #include<algorithm>
-#include<iostream>
 #include<cstring>
 using namespace std;
 typedef vector<int> VEC;
-
+void normalize(vector<int>& num){
+	num.push_back(0);
+	for(int i=0; i<num.size()-1; i++){
+		if(num[i]<0){
+			int borrow = (abs(num[i])+9) / 10;
+			num[i+1] -= borrow;
+			num[i] += borrow * 10;
+		}
+		else{
+			num[i+1] += num[i]/10;
+			num[i] %= 10;
+		}
+    }
+	while(num.size() > 1 && num.back()==0) num.pop_back();
+}
 VEC multi(VEC& a, VEC& b){
 	VEC c(a.size() + b.size() - 1, 0);
 	for(int i=0; i<a.size(); i++)
 		for(int j=0; j<b.size(); j++)
-			c[i+j] = a[i] * b[j];
-	//normalize(c);
+			c[i+j] += a[i] * b[j];
+	normalize(c);
 	return c;
 }
 
@@ -75,14 +88,16 @@ void sub(VEC& a, VEC& b){
 VEC kara(VEC& a, VEC& b){
 	int an = a.size();
 	int bn = b.size();
-	if(an==0 && bn==0) return VEC();
 	if(an < bn) return kara(b, a);
-	if(an <= 50) return multi(a, b);
+	if(!an && !bn) return VEC();
+	if(an <= 100) return multi(a, b);
 	int half = an/2;
+	//a = a1*10**half + a0 로 가정해야 a0가 앞부분 가져감 (뒤집어서 받으니까)
+    //a = a0*10**half + a1 으로 가정하고 a0에 앞부분 부터 놨다가 틀렸었음
 	VEC a0(a.begin(), a.begin()+half);
 	VEC a1(a.begin()+half, a.end());
 	VEC b0(b.begin(), b.begin()+min<int>(half, b.size()));
-	VEC b1(b.begin()+min<int>(half, b.size()), b.end());
+	VEC b1(b.begin()+min<int>(half,b.size()), b.end());
 	VEC z0 = kara(a0, b0);
 	VEC z2 = kara(a1, b1);
 	add(a0, a1, 0);
@@ -91,10 +106,21 @@ VEC kara(VEC& a, VEC& b){
 	sub(z1, z0);
 	sub(z1, z2);
 	VEC ret;
-	add(ret, z2, half+half);
-	add(ret, z1, half);
 	add(ret, z0, 0);
+	add(ret, z1, half);
+	add(ret, z2, half+half);
 	return ret;
+}
+int main(){
+	string s1, s2;
+    cin >> s1 >> s2;
+    VEC v1, v2;
+    for(int i=s1.size()-1; i>=0; i--) v1.push_back(s1[i]-'0');
+	cout << endl;
+    for(int i=s2.size()-1; i>=0; i--) v2.push_back(s2[i]-'0');
+    VEC c = kara(v1, v2);
+    for(int i=c.size()-1; i>=0; i--) cout << c[i] << ' ';
+	return 0;
 }
 ```
 
