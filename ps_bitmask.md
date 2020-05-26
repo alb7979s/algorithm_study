@@ -139,31 +139,59 @@ https://www.algospot.com/judge/problem/read/GRADUATION
 ```c++
 #include<cstdio>
 #include<cstring>
-#include<vector>
 using namespace std;
-vector<int> c[10], v[10];
+#define min(a, b) ((a) < (b) ? (a) : (b))
+const int INF=(int)1e9, SIZE=12;
 int n, k, m, l;
+int mem[10][1<<SIZE];
+int classes[10], pre[SIZE];
+int bitCount(int n){
+	if(n==0) return 0;
+	return n%2 + bitCount(n/2);
+}
+int solve(int pos,int taken){
+	if(bitCount(taken) >= k) return 0;
+	if(pos == m) return INF;
+	int& ret = mem[pos][taken];
+	if(ret!=-1) return ret;
+	ret = INF;
+	int canTake = classes[pos] & ~(taken);
+	for(int i=0; i<n; i++)
+		if((canTake & (1<<i)) && ((pre[i] & taken) != pre[i]))
+			canTake &= ~(1<<i);
+	for(int i=canTake; i; i=(i-1)&canTake){
+		if(bitCount(i) > l) continue;
+		ret = min(ret, solve(pos+1, taken | i)+1);
+	}
+	ret = min(ret, solve(pos+1, taken));
+	return ret;
+}
 int main(){
 	int tc;
 	scanf("%d", &tc);
 	while(tc--){
+		memset(mem, -1, sizeof(mem));	//testcase마다 초기화 해야는디 밖에서 시켜줘서 틀림 
+		memset(classes, 0, sizeof(classes));
+		memset(pre, 0, sizeof(pre));
 		scanf("%d %d %d %d", &n, &k, &m, &l);
 		int cnt, temp;
 		for(int i=0; i<n; i++){
 			scanf("%d", &cnt);
 			while(cnt--){
 				scanf("%d", &temp);
-				v[i].push_back(temp);
+				pre[i] |= (1<<temp);		//1<<temp 줘야는디 temp줘서 틀림 
 			}
 		}
 		for(int i=0; i<m; i++){
 			scanf("%d", &cnt);
 			while(cnt--){
 				scanf("%d", &temp);
-				c[i].push_back(temp);
+				classes[i] |= (1<<temp);
 			}
 		}
-	//	printf("%d\n",solve());
+		int res = solve(0, 0);
+		if(res==INF) printf("IMPOSSIBLE\n");
+		else printf("%d\n", res);
 	}
 	return 0;
 }
