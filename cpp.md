@@ -141,3 +141,32 @@ int a=1;
 a + '0' // 숫자 => 문자
 ```
 
+#### -동적 메모리 할당 new(), delete()
+
+```c++
+int *ptr = new int;
+*prt = 7;
+delete ptr;
+ptr = 0; 	//nullptr
+//댕글링 포인터: 할당이 해제된 메모리를 가리키는 포인터, 이거 참조 or 삭제 하려면 오류남
+//Null pointers
+if(!ptr) ptr = new int; //null pointer메모리 할당
+delete ptr; // null pointer는 삭제되지 않음, ptr이 null이 아니라면 할당된 변수 삭제됨
+//Memory leak
+void fun(){int* ptr = new int;} //함수 끝나면 ptr도 끝, 근데 메모리는 할당 받아놓음
+//Memory leak2
+int value = 5;
+int* ptr = new int;		
+//delete ptr;  포인터 재할당 해주기 전에 해제해주면 해결 됨
+ptr = &value;	//동적으로 할당된 메모리의 주소 보유한 포인터에 다른 값 할당 된 경우
+```
+
+#### - string::find("string", pos) 		//사실 인자 더 있는데 두개만 알아도 뭐.. 
+
+```c++
+string a("abca");
+a.find("ab"); // 0반환
+a.find("z"); // 없음, -1반환
+a.find("a",2) //2번째 문자부터 찾음, 3반환
+```
+
