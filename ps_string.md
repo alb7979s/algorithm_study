@@ -184,3 +184,78 @@ int main(){
 }
 ```
 
+##### 재하의 금고 658p
+
+https://www.algospot.com/judge/problem/read/JAEHASAFE
+
+```c++
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm> 			
+using namespace std;
+typedef vector<int> V;	
+V getPartialMatch(const string& N){
+	int m = N.size();
+	V pi(m, 0);
+	int begin = 1, matched = 0;
+	while (begin + matched < m){
+		if (N[begin + matched] == N[matched]){
+			matched++;
+			pi[begin + matched - 1] = matched;		
+		}
+		else{
+			if (!matched) begin++;
+			else{
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return pi;
+}
+int solve(const string& S, const string& RS){
+	int n = S.size(), m = RS.size();
+	V pi = getPartialMatch(RS);
+	int begin = 0, matched = 0;
+	while (begin < n){
+		if (matched<m && S[begin + matched] == RS[matched]){
+			matched++;
+			if (matched == m) return begin;
+		}
+		else{
+			if (!matched) begin++;
+			else{
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return 0;
+}
+int shift(const string& original, const string& target){
+	return solve(original + original, target);
+}
+int main(){
+	int tc;
+	cin >> tc;
+	while (tc--){
+		int n;
+		cin >> n;
+		vector<string> dial;
+		for (int i = 0; i <= n; i++){
+			string temp;
+			cin >> temp;
+			dial.push_back(temp);
+		}
+		int res = 0;
+		for (int i = 0; i < n; i++){
+			if (i % 2 != 0) res += shift(dial[i], dial[i + 1]);
+			else res += shift(dial[i + 1], dial[i]);
+		}
+		cout << res << endl;
+	}
+	return 0;
+}
+```
+
