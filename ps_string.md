@@ -122,3 +122,65 @@ int main(){
 }
 ```
 
+##### 팰린드롬 만들기 655p
+
+https://www.algospot.com/judge/problem/read/PALINDROMIZE
+
+```c++
+#include<iostream>
+#include<string>
+#include<vector>
+#include<algorithm> 			
+using namespace std;
+typedef vector<int> V;			//python이랑 헷갈려서 typedef앞에 #붙임..ㅋㅋㅋ
+V getPartialMatch(const string& N){
+	int m = N.size();
+	V pi(m, 0);
+	int begin = 1, matched = 0;
+	while (begin + matched < m){
+		if (N[begin + matched] == N[matched]){
+			matched++;
+			pi[begin + matched - 1] = matched;		//[begin+matched] 했다가 RTE뜸
+		}
+		else{
+			if (!matched) begin++;
+			else{
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return pi;
+}
+int solve(const string& S, const string& RS){
+	int n = S.size(), m = RS.size();
+	V pi = getPartialMatch(RS);
+	int begin = 0, matched = 0;
+	while (begin < n){
+		if (matched<m && S[begin + matched] == RS[matched]){
+			matched++;
+			if ((begin + matched) == n) return n + n - matched;
+		}
+		else{
+			if (!matched) begin++;
+			else{
+				begin += matched - pi[matched - 1];
+				matched = pi[matched - 1];
+			}
+		}
+	}
+	return 0;
+}
+int main(){
+	int tc;
+	cin >> tc;
+	while (tc--){
+		string S, RS;
+		cin >> S;
+		for (int i = S.size()-1; i >= 0; i--) RS += S[i];
+		cout << solve(S, RS) << endl;
+	}
+	return 0;
+}
+```
+
