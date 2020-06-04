@@ -6,6 +6,8 @@
 
 해당하는 string의 첫번째 문자의 주소값 반환
 
+#### -strcmp(const char* str1, const char* str2)
+
 ```c++
 //atoi
 char* cStr = "20200515";
@@ -17,7 +19,8 @@ const char* cStr = cppstr.c_str();
 printf("%s", cStr);
 //"CPPstring" 출력 됨
 
-
+strcmp(str1, str2)
+// str1 < str2 :: -1, str1 > str2 :: 1, str1 == str2 :: 0
 ```
 
 #### - operator()
