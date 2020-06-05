@@ -262,46 +262,30 @@ int main(){
 ##### 접미사 배열
 
 ```c++
-#include<cstdio>
+#include<string>		//string 자료형으로 쓰려면 cstring 아닌 string
 #include<algorithm>
-#include<cstring>
-
-#define MAX_N 600000
+#include<iostream>
 using namespace std;
-
-/*
-str:: 문자열이 들어갈 배열
-t:: 단어의 위치를 보는 변수
-n:: str의 길이
-g:: 그룹
-tg:: 팀 그룹
-SA:: Suffix Array
-*/
-char str[MAX_N];
-int t, n, g[MAX_N], tg[MAX_N], SA[MAX_N];
-
+const int SIZE = (int)1e6;
+string str;
+int n, t, g[SIZE], tg[SIZE], SA[SIZE];
 bool cmp(int x, int y){
 	if (g[x] == g[y]) return g[x + t] < g[y + t];
 	return g[x] < g[y];
 }
-
-void getSA(const char* str){
+void getSA(const string& str){
 	t = 1;
-	n = (int)strlen(str);
+	n = str.size();
 	for (int i = 0; i < n; i++){
 		SA[i] = i;
-		g[i] = str[i] - 'a';	//첫 글자 대소관계만 알면 됨
+		g[i] = str[i] - 'a';
 	}
-	//1, 2, 4, 8, ...
 	while (t <= n){
 		g[n] = -1;
 		sort(SA, SA + n, cmp);
 		tg[SA[0]] = 0;
-		//다음 그룹 배정
 		for (int i = 0; i < n; i++){
-			//그룹 다를 경우 다음 그룹 번호 할당
 			if (cmp(SA[i - 1], SA[i])) tg[SA[i]] = tg[SA[i - 1]] + 1;
-			//그룹 같을 경우 같은 그룹 번호 할당
 			else tg[SA[i]] = tg[SA[i - 1]];
 		}
 		for (int i = 0; i < n; i++) g[i] = tg[i];
@@ -309,13 +293,26 @@ void getSA(const char* str){
 	}
 }
 int main(){
-	scanf("%s", &str);
+	cin >> str;
 	getSA(str);
-	printf("\n [Suffix Array]\n");
-	for (int i = 0; i < n; i++) printf("%s\n", str + SA[i]);
+	cout << endl << "[Suffix Array]" << endl;
+	for (int i = 0; i < n; i++) cout << str.substr(SA[i]) << endl;
 	return 0;
 }
-
 //출처: https://www.crocus.co.kr/613
 ```
+
+##### 원형 문자열 668p
+
+```c++
+string minShift(const string& s){
+    string s2 = s + s;
+    getSA(s2);
+    for(int i=0; i<s2.size(); i++)
+        if(SA[i] <= s.size()) return s2.substr(SA[i], s.size());
+    return "nope";
+}
+```
+
+##### 서로 다른 부분 문자열의 수 669p
 
