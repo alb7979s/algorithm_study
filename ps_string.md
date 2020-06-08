@@ -316,3 +316,102 @@ string minShift(const string& s){
 
 ##### 서로 다른 부분 문자열의 수 669p
 
+```c++
+int commonPrefix(const string& s, int i, int j){
+	int k = 0;
+	while (i < s.size() && j < s.size() && s[i] == s[j]){
+		i++; j++; k++;
+	}
+	return k;
+}
+int countSubstrings(const string& s){
+	getSA(s);
+	int ret = 0;
+	int n = s.size();
+	for (int i = 0; i < s.size(); i++){
+		int cp = 0;
+		if (i > 0) cp = commonPrefix(s, SA[i - 1], SA[i]);
+		ret += n - SA[i] - cp;
+	}
+	return ret;
+}
+```
+
+##### 말버릇 672p
+
+https://www.algospot.com/judge/problem/read/HABIT
+
+```c++
+#include<cstdio>
+#include<string>
+#include<iostream>
+#include<vector>
+#include<algorithm>
+using namespace std;
+const int SIZE = (int)5e6;
+int g[SIZE], tg[SIZE], SA[SIZE];
+int t, n;
+string str;
+bool cmp(int x, int y){
+	if (g[x] == g[y]) return g[x + t] < g[y + t];
+	return g[x] < g[y];
+}
+void getSA(const string& str){
+	t = 1;
+	int n = str.size();
+	for (int i = 0; i < n; i++){
+		SA[i] = i;
+		g[i] = str[i] - 'a';
+	}
+	while (t <= n){
+		g[n] = -1;
+		sort(SA, SA + n, cmp);
+		tg[SA[0]] = 0;
+		for (int i = 1; i < n; i++){
+			if (cmp(SA[i - 1], SA[i])) tg[SA[i]] = tg[SA[i - 1]] + 1;
+			else tg[SA[i]] = tg[SA[i - 1]];
+		}
+		for (int i = 0; i < n; i++) g[i] = tg[i];
+		t <<= 1;
+	}
+}
+int commonPrefix(const string& str, int i, int j){
+	int k = 0;
+	while (i < str.size() && j < str.size() && str[i] == str[j]){
+		i++; j++; k++;
+	}
+	return k;
+}
+int countSubstrings(const string& str){
+	getSA(str);
+	int ret = 0;
+	int n = str.size();
+	for (int i = 0; i < str.size(); i++){
+		int cp = 0;
+		if (i > 0) cp = commonPrefix(str, SA[i - 1], SA[i]);
+		ret += n - SA[i] - cp;
+	}
+	return ret;
+}
+int solve(int k, const string& str){
+	getSA(str);
+	int ret = 0;
+	for (int i = 0; i + k <= str.size(); i++)
+		ret = max(ret, commonPrefix(str, SA[i], SA[i + k - 1]));
+	return ret;
+}
+int main(){
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int tc;
+	cin >> tc;
+	while(tc--){
+		int k;
+		cin >> k;
+		cin >> str;
+		cout << solve(k, str) << endl;
+	}
+	return 0;
+}
+```
+
