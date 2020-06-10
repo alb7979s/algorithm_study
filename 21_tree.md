@@ -97,23 +97,14 @@ struct TreeNode {
 };
 const int SIZE = 100;
 int n, y[SIZE], x[SIZE], radius[SIZE];
-int sqr(int x){ return x*x; }
-int sqrdist(int a, int b){ return sqr(y[a] - y[b]) + sqr(x[a] - x[b]); }
-bool encloses(int a, int b){ return radius[a] > radius[b] && sqrdist(a, b) < sqr(radius[a] - radius[b]); }
-bool isChild(int parent, int child){
-	if (!encloses(parent, child)) return false;
-	for (int i = 0; i < n; i++)
-		if (i != parent && i != child && encloses(parent, i) && encloses(i, child))
-			return false;
-	return true;
-}
+
 //지금 까지 찾은 가장 긴 leaf-leaf 경로 저장
 int longest;
 int height(TreeNode* root){
 	vector<int> heights;
 	//각 자식을 루트로 하는 서브트리의 높이 계산
 	for (int i = 0; i < root->children.size(); i++){
-		heights.push_back(height(root->children[i]));
+		heights.push_back(height(root->children[i]));		//서브트리의 높이 저장
 	}
 	//자식 없으면 0 반환
 	if (heights.empty()) return 0;
@@ -126,9 +117,20 @@ int height(TreeNode* root){
 int solve(TreeNode* root){
 	longest = 0;
 	//트리의 높이와 최대 leaf-leaf경로 중 가장 큰 값 선택
-	int h = height(root);
+	int h = height(root);		//longest는 이 함수 돌면서 구하고 return값으론 높이 받아서 h에 저장
 	return max(longest, h);
 }
+int sqr(int x){ return x*x; }
+int sqrdist(int a, int b){ return sqr(y[a] - y[b]) + sqr(x[a] - x[b]); }
+bool encloses(int a, int b){ return radius[a] > radius[b] && sqrdist(a, b) < sqr(radius[a] - radius[b]); }
+bool isChild(int parent, int child){
+	if (!encloses(parent, child)) return false;
+	for (int i = 0; i < n; i++)
+		if (i != parent && i != child && encloses(parent, i) && encloses(i, child))
+			return false;
+	return true;
+}
+
 TreeNode* getTree(int root){
 	TreeNode* ret = new TreeNode();
 	for (int ch = 0; ch < n; ch++)
@@ -137,16 +139,16 @@ TreeNode* getTree(int root){
 	return ret;
 }
 int main(void) {
-	int cases;
-	cin >> cases;
-	while (cases--)
-	{
+	ios_base::sync_with_stdio(0);
+	cin.tie(0);
+	int tc;
+	cin >> tc;
+	while (tc--){
 		cin >> n;
 		for (int i = 0; i < n; i++)
 			cin >> x[i] >> y[i] >> radius[i];
 		TreeNode* root = getTree(0);
 		cout << solve(root) << endl;
-
 	}
 	return 0;
 }
