@@ -179,3 +179,15 @@ a.find("a",2) //2번째 문자부터 찾음, 3반환
 Foo(int n): bar(num){};		//bar를 num으로 초기화
 ```
 
+#### - map<key, value>
+
+```c++
+//Balanced Binary Search Tree(Red Black Tree로 구현됐대)
+map<int, int>::lower_bound(x) //트리에 포함된 x이상의 키 중 가장 작은 값 반환
+find(key) //key값에 해당하는 iterator 반환
+count(key)  //key값에 해당하는 원소들의 개수 반환
+insert(make_pair(key, value))	//추가
+erase(key)	//제거
+clear() 	//초기화
+```
+
