@@ -71,3 +71,54 @@ int main(){
 }
 ```
 
+##### 트립
+
+```c++
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+typedef int KeyType;
+struct Node{
+	KeyType key;
+	int priority, size;
+	Node *left, *right;
+	Node(const KeyType& _key) : key(_key), priority(rand()), size(1), left(NULL), right(NULL){}
+	void setLeft(Node* newLeft) { left = newLeft; calcSize(); }
+	void setRight(Node* newRight) { right = newRight; calcSize(); }
+	void calcSize(){
+		size = 1;
+		if (left) size += left->size;
+		if (right) size += right->size;
+	}
+};
+typedef pair<Node*, Node*> NodePair;
+NodePair split(Node* root, KeyType key){
+	if (root == NULL) return NodePair(NULL, NULL);
+	//root가 key 미만이면 오른쪽 서브트리 쪼갬
+	if (root->key < key){
+		NodePair rs = split(root->right, key);
+		root->setRight(rs.first);
+		return NodePair(root, rs.second);
+	}
+	//root가 key 이상이면 왼쪽 쪼갬
+	NodePair ls = split(root->left, key);
+	root->setLeft(ls.first);
+	return NodePair(root, ls.second);
+}
+Node* insert(Node* root, Node* node){
+	if (root == NULL) return node;
+	//node가 루트 대체해야함. 해당 서브트리를 반으로 잘라 각각 자손으로
+	if (root->priority < node->priority){
+		NodePair splitted = split(root, node->key);
+		node->setLeft(splitted.first);
+		node->setRight(splitted.second);
+		return node;
+	}
+	else if (node->key < root->key)
+		root->setLeft(insert(root->left, node));
+	else
+		root->setRight(insert(root->right, node));
+	return root;
+}
+```
+
