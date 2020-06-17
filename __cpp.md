@@ -191,3 +191,10 @@ erase(key)	//제거
 clear() 	//초기화
 ```
 
+#### -tuple
+
+```c++
+get<idx>(tuple);	//튜플로부터 값 가져오는 함수
+swap(tuple1, tuple2)	//swap도 됨
+```
+
