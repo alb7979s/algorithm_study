@@ -1,6 +1,6 @@
 from sys import*
 from collections import*
-input = stdin.readline
+setrecursionlimit(10**6)
 class Node:
     def __init__(self, data):
         self.data = data
@@ -51,7 +51,7 @@ class BST:
             if node.left and node.right:
                 parent, child = node, node.right
                 while child.left is not None:
-                    parent, child = node, node.right
+                    parent, child = node, node.left
                 child.left = node.left
                 if parent != node:
                     parent.left = child.right
