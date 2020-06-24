@@ -90,3 +90,48 @@ int prim(int start) {
 }
 ```
 
+##### 근거리 네트워크979p
+
+https://algospot.com/judge/problem/read/LAN
+
+```python
+#시간초과남 c++로 바꿔보기
+from sys import*
+from heapq import*
+input = stdin.readline
+def find(u):
+    if parent[u] == u: return u
+    parent[u] = find(parent[u])
+    return parent[u]
+def union(u, v):
+    u = find(u); v = find(v)
+    if(u==v): return u
+    if(rank[u] > rank[v]): u, v = v, u
+    parent[u] = v
+    if(rank[u] == rank[v]): rank[v]+=1
+for tc in range(int(input())):
+    n,m = map(int,input().split())
+    X=list(map(int,input().split()))
+    Y=list(map(int,input().split()))
+    parent=[i for i in range(n)]
+    rank=[1 for i in range(n)]
+    dist=[]
+    res=0
+    for i in range(m):
+        a,b=map(int,input().split())
+        union(a,b)
+    for i in range(n):
+        for j in range(i+1,n):
+            dist.append(((((X[i]-X[j])**2) + ((Y[i]-Y[j])**2))**0.5, i, j))
+    dist.sort()
+    for d, x, y in dist:
+        x = find(x)
+        y = find(y)
+        if x!=y:
+            union(x, y)
+            res += d
+    print(res)
+            
+
+```
+
