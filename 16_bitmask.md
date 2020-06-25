@@ -197,3 +197,27 @@ int main(){
 }
 ```
 
+---
+
+추가문제
+
+https://www.acmicpc.net/problem/2098
+
+```python
+def tsp(pos, visited):
+    if visited == (1<<n)-1:
+        if w[pos][0]!=0: return w[pos][0]
+        return INF
+    if mem[pos][visited]!=-1: return mem[pos][visited]
+    mem[pos][visited]=INF
+    for i in range(n):
+        if visited & (1<<i) or w[pos][i]==0: continue
+        mem[pos][visited] = min(mem[pos][visited], tsp(i, visited | (1<<i))+w[pos][i])
+    return mem[pos][visited]
+INF=1e9
+n=int(input())
+mem=[[-1]*(1<<n) for _ in range(n)]
+w=[list(map(int,input().split()))for _ in range(n)]
+print(tsp(0, 1))
+```
+
