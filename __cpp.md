@@ -198,3 +198,46 @@ get<idx>(tuple);	//튜플로부터 값 가져오는 함수
 swap(tuple1, tuple2)	//swap도 됨
 ```
 
+
+
+##### 라이브러리 흑마법
+
+```c++
+#include <bits/stdc++.h>
+```
+
+
+
+##### c++ 사칙연산 함수 간단히
+
+```c++
+int f(int a, int b, char c) { return c == '+' ? a + b : c == '-' ? a - b : a * b; }
+```
+
+
+
+##### sort(), find()
+
+```
+sort(시작, 끝, 정렬조건)
+find(시작, 끝, 찾을 값)
+```
+
+
+
+##### set(), map()
+
+```
+set:: 집합(Balanced Binary Tree로 구현됨)
+map:: 사전(Balanced Binary Tree로 구현됨)
+```
+
+
+
+##### 강제 형변환
+
+```c++
+python:: int(x)
+c++::	(int)x;
+```
+
