@@ -1,4 +1,5 @@
 #data,value 넣으면 해당 data에 대한 key를 찾아 table[key]에 value 저장
+#value 없는경우는 data가 value가 되도록
 class Hashtable:
     def __init__(self):
         self.table = [None for _ in range(SIZE)]
@@ -13,7 +14,8 @@ class Hashtable:
                     self.table[key][i][1] = value      #업데이트 될수도 있으니까
                     return
             self.table[key].append([key, value])       #같은 key 없으면 추가
-    def save(self, data, value):
+    def save(self, data, value=''):
+        if value == '': value=data
         key = self.hash_func(data)
         self._add(key, value)
         return key
