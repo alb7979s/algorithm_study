@@ -1,6 +1,6 @@
 class UnionFind:
     def __init__(self, n):
-        parent = [range(n+1)]
+        self.parent = [i for i in range(n+1)]
     def find(self, u):
         if self.parent[u] == u: return u
         self.parent[u] = self.find(self.parent[u])
