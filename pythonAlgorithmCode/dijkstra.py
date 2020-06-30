@@ -1,4 +1,6 @@
 #1753
+#한 정점에서 출발, 다른 모든 정점으로 가는 최단경로
+#음의 간선 고려 안함
 from heapq import*
 from sys import*
 input=stdin.readline
