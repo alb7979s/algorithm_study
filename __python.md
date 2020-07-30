@@ -33,3 +33,11 @@ print(t) 		#'clzls'출력
 
 
 cf) \_\_repr\_\_ 도 문자열 반환하는거로 비슷한데, 이 친구는 객체를 평문으로 표현 하는 것
+
+
+
+#### pypy제출시 setrecursionlimit() 하면 메모리 초과뜸
+
+https://www.acmicpc.net/source/21346757
+
+setrecursionlimit()없애니까 통과뜸.. 예전에 이런 문제 그냥 넘어간적 있는거 같은데???!
