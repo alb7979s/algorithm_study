@@ -55,3 +55,18 @@ perm = permutaions(a, 2)	#3P2 => [(1,2),(1,3),(2,1),(2,3),(3,1),(3,2)]
 comb = combinations(a, 2)	#3C2 => [(1,2),(1,3),(2,3)]
 ```
 
+
+
+#### 이진탐색 함수
+
+```python
+from bisect import*
+#bisect == bisect_right <-> bisect_left
+#x 초과 중 가장 작은 값 -> right, x 이하 중 가장 큰 값-> left
+a=[1,3,5,5,7,9]
+print(bisect(a, 6))          #4
+print(bisect(a, 5))          #4
+print(bisect_left(a, 4))     #2
+print(bisect_left(a, 5))     #2
+```
+
