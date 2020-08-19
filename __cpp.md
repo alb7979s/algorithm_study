@@ -241,3 +241,16 @@ python:: int(x)
 c++::	(int)x;
 ```
 
+#### 
+
+##### lower_bound(), upper_bound(): 순서대로 찾으려는 값 이상, 초과
+
+```c++
+#include<algorithm>
+int n = 4;
+arr[]={1, 3, 5, 7};
+//인자: 배열, 크기, 찾으려는 값
+std::lower_bound(arr, arr+n, 4) //2
+std::upper_bound(arr, arr+n, 4)	//3
+```
+
